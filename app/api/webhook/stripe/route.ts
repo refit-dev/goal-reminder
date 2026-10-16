@@ -4,9 +4,10 @@ import Stripe from "stripe";
 import { supabase } from "@/lib/supabase";
 import { EVENTS, trackEvent } from "@/lib/posthog";
 import { sendSMS } from "@/lib/twilio";
+import { getInvoiceSubscription } from './stripe-subscription-period';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2023-10-16",
+  apiVersion: "2026-09-30.endive",
 });
 
 export const dynamic = "force-dynamic";
@@ -133,7 +134,7 @@ export async function POST(request: Request) {
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string);
+        const subscription = await stripe.subscriptions.retrieve((getInvoiceSubscription(invoice)) as string);
         const user = await getUserFromSubscription(subscription);
 
         if (user) {
