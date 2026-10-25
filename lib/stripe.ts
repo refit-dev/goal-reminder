@@ -2,7 +2,7 @@ import Stripe from "stripe";
 import { EVENTS, trackEvent } from "./posthog";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2023-10-16",
+  apiVersion: "2026-09-30.endive",
 });
 
 export const createCheckoutSession = async (phoneNumber: string, promoCode?: string) => {
